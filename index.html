@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Proyecto Jamal</title>
+	<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <!-- Material Design icon font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+</head>
+<style>
+	#pieChart {    
+	position:absolute;
+	top:90px;
+	left:10px;
+	width:400px;
+	height: 400px; 
+ 
+}
+/*#pieChart:hover{
+   transform:scale(1.2,0.5);
+   transition-property: all;
+}*/
+#lineChart {    
+	position:absolute;
+	top:10px;
+	left:460px;
+	height: 190px;
+}
+
+#barChart {
+	position:absolute;
+	top:200px;
+	left:430px;
+	height: 250px;
+}
+
+.slice {
+   font-size: 16px;
+   font-family: 'Noto Sans', sans-serif;
+   fill: white; //svg specific - instead of color
+   font-weight: bold;	
+  		} 
+
+/*for line chart*/
+.axis path, .axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges; //The shape-rendering property is an SVG attribute, used here to make sure our axis and its tick mark lines are pixel-perfect. 
+}
+
+.line {
+  fill: none;
+  /*stroke: steelblue;*/
+  stroke-width: 10px;
+}
+
+.title {
+	  font-family: 'Roboto', sans-serif;
+    font-size: 18px;	
+    
+		
+}
+ 
+
+.yAxis {
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 16px;
+    fill: white;
+}
+				 
+path:hover {  opacity:0.9; }
+rect:hover {  opacity:0.7; }
+
+
+#datosInteres{
+  background: #EEEEEE;
+  display:none;
+  position: absolute;
+  top:5%;
+  right:0%;
+  margin:2%;
+  
+  
+}
+
+#informacion{
+  position: absolute;
+  width:40%;
+  top:0%;
+  right:5%;
+  display:none;
+  margin:1%;
+  background: #EEEEEE;
+} 
+#enlaces{
+  position: absolute;
+  top:-3%;
+  right:50%; 
+  
+}
+#enlaces li{
+  font-weight: bold;
+  margin-bottom: -10px;
+}
+#detalles:hover{
+  background:#EEEEEE;
+}
+#informacionInteres:hover{
+  background: #EEEEEE;
+}
+#aprender:hover{
+  background: #EEEEEE;
+}
+#enlaceTrabajar:hover{
+  background: #EEEEEE;
+}
+table{
+  left:21%;
+  position:absolute;
+}
+#soluciones{
+  background:#EEEEEE;
+  position:absolute;
+  right:15%;
+  bottom:10%;
+  display:none;
+}
+#aprenderInformacion{
+  position: absolute;
+  width:40%;
+  top:0%;
+  right:5%;
+  display:none;
+  margin:0%;
+  background: #EEEEEE;
+}
+#aprenderInformacion li{
+  margin-bottom: -12px;
+}
+#trabajar{
+  position: absolute;
+  width:40%;
+  top:20%;
+  right:5%;
+  display:none;
+  margin:0%;
+  background: #EEEEEE;
+}
+</style>
+<body>
+	  <div id="pieChart"></div>
+  <div id="barChart"></div>  
+  <div id="lineChart"></div>
+  <div id="instrucciones"> </div>
+  <div id="enlaces">
+    <ul class="demo-list-item mdl-list">
+      <li class="mdl-list__item" id="detalles" onmouseover="showWelcome();" onmouseout="hideWelcome();">Detalles de interés</li></a>
+      <li class="mdl-list__item" id="informacionInteres" onmouseover="showInformacion();" onmouseout="hideInformacion();">Información de interés
+    </li></a>
+      <li class="mdl-list__item" id="aprender" onmouseover="showAprender();" onmouseout="hideAprender();">¿Qué aprenderás?
+  </li>
+      <li class="mdl-list__item" id"enlaceTrabajar" onmouseover="showTrabajar();" onmouseout="hideTrabajar();" >Salida profesional
+    </li>
+    </ul>
+  </div>
+  <div id="datosInteres">
+    <ul class="demo-list-item mdl-list">
+      <li  class="mdl-list__item">Hay tan sólo tres alumnos que han acabado las prácticas pero no han aprobado<br>el curso.
+      </li>
+      <li  class="mdl-list__item">En cinco años que lleva de vida el FP DUAL DAW sólo un alumno no ha<br> finalizado las prácticas.
+      </li>
+      <li  class="mdl-list__item">El 60% del alumnado cuando finaliza las prácticas sigue en la empresa.<br>Del 40% restante, el 30% es por que no les contratan y el 10% es porque<br> quieren cambiar de empresa.</li>
+      <li  class="mdl-list__item">Sólo ha habido dos casos de cambio de empresa durante las prácticas.</li>   
+    </ul> 
+  </div>
+  <div id="informacion">
+    <ul  class="demo-list-item mdl-list">
+      <li  class="mdl-list__item">Las empresas realizan un compromiso de adhesión de un año para otro<br>aunque siempre solicitan más alumnos de los que realmente necesitan:
+      </li>
+<table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+  <thead>
+    <tr>
+      <th class="mdl-data-table__cell--non-numeric">Curso</th>
+      <th>C. Adhesión</th>
+      <th>C. Adhesión Real</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="mdl-data-table__cell--non-numeric">2012-2013</td>
+      <td>9</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td class="mdl-data-table__cell--non-numeric">2013-2014</td>
+      <td>15</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td class="mdl-data-table__cell--non-numeric">2014-2015</td>
+      <td>15</td>
+      <td>10</td>
+    </tr>
+     <td class="mdl-data-table__cell--non-numeric">2015-2016</td>
+      <td>22</td>
+      <td>16</td>
+    </tr>
+     <td class="mdl-data-table__cell--non-numeric">2016-2017</td>
+      <td>41</td>
+      <td>21</td>
+    </tr>
+  </tbody>
+</table>
+      <li  class="mdl-list__item">Los sueldos en el contrato de formación oscilan entre los 375 y los 750 euros. El sueldo medio es de 500 euros.
+      </li>  
+  </div>
+  <div id="aprenderInformacion">
+    <ul class="demo-list-item mdl-list">
+      <li  class="mdl-list__item">Configurar y explotar sistemas informáticos, adaptando la configuración lógica del sistema según las necesidades de uso y los criterios establecidos.</li>
+    <li  class="mdl-list__item">Aplicar técnicas y procedimientos relacionados con la seguridad en sistemas, servicios y aplicaciones, cumpliendo el plan de seguridad.
+      </li>
+    <li  class="mdl-list__item">Gestionar servidores de aplicaciones adaptando su configuración en cada caso para permitir el despliegue de aplicaciones web.
+      </li>
+    <li  class="mdl-list__item">Gestionar bases de datos, interpretando su diseño lógico y verificando integridad, consistencia, seguridad y accesibilidad de los datos.
+      </li>
+    <li  class="mdl-list__item">Desarrollar aplicaciones web con acceso a bases de datos utilizando lenguajes, objetos de acceso y herramientas de mapeo adecuados a las especificaciones.
+      </li>
+    <li  class="mdl-list__item">Integrar contenidos en la lógica de una aplicación web, desarrollando componentes de acceso a datos adecuados a las especificaciones.
+      </li>
+    <li  class="mdl-list__item">Desarrollar interfaces en aplicaciones web de acuerdo con un manual de estilo, utilizando lenguajes de marcas y estándares web.
+      </li>
+    <li  class="mdl-list__item">Desarrollar componentes multimedia para su integración en aplicaciones web, empleando herramientas específicas y siguiendo las especificaciones establecidas.
+      </li>
+  </div>
+  <div id="soluciones">
+    <ul class="demo-list-item mdl-list">
+      <li  class="mdl-list__item">A.C -- Alumnos que comenzaron el curso
+      </li>
+      <li  class="mdl-list__item">O.P.E -- Alumnos que obtuvieron plaza en la empresa
+      </li>
+      <li  class="mdl-list__item">E.P -- Empresas participantes ese año
+      </li>
+    </ul>
+   </div> 
+  <div id="trabajar">
+     <ul class="demo-list-item mdl-list">
+       <li  class="mdl-list__item">Programador Web.        </li>
+       <li  class="mdl-list__item">Programador Multimedia.
+       </li>
+       <li  class="mdl-list__item">Desarrollador de aplicaciones en entornos Web.
+       </li>
+    </ul>
+  </div>
+  <script>
+  	
+
+
+var 	formatAsPercentage = d3.format("%"),
+		formatAsPercentage1Dec = d3.format(".1%"),
+		formatAsInteger = d3.format(","),
+		fsec = d3.time.format("%S s"),
+		fmin = d3.time.format("%M m"),
+		fhou = d3.time.format("%H h"),
+		fwee = d3.time.format("%a"),
+		fdat = d3.time.format("%d d"),
+		fmon = d3.time.format("%b")
+		;
+
+/*
+############# PIE CHART ###################
+-------------------------------------------
+*/
+
+
+
+function dsPieChart(){
+
+	var dataset = [
+			{category: "2012-2013", measure: 0.20},
+	      {category: "2013-2014", measure: 0.20},
+	      {category: "2014-2015", measure: 0.20},
+	      {category: "2015-2016", measure: 0.20},
+	      {category: "2016-2017", measure: 0.20}  
+	      ]
+	      ;
+
+	var 	width = 400,
+		   height = 400,
+		   outerRadius = Math.min(width, height) / 2,
+		   innerRadius = outerRadius * .999,   
+		   // for animation
+		   innerRadiusFinal = outerRadius * .5,
+		   innerRadiusFinal3 = outerRadius* .40,
+		   color = d3.scale.category20()    //builtin range of colors
+		   ;
+	    
+	var vis = d3.select("#pieChart")
+	     .append("svg:svg")              //create the SVG element inside the <body>
+	     .data([dataset])                   //associate our data with the document
+	         .attr("width", width)           //set the width and height of our visualization (these will be attributes of the <svg> tag
+	         .attr("height", height)
+	     		.append("svg:g")                //make a group to hold our pie chart
+	         .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")")    //move the center of the pie chart from 0, 0 to radius, radius
+				;
+				
+   var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
+        	.outerRadius(outerRadius).innerRadius(innerRadius);
+   
+   // for animation
+   var arcFinal = d3.svg.arc().innerRadius(innerRadiusFinal).outerRadius(outerRadius);
+	var arcFinal3 = d3.svg.arc().innerRadius(innerRadiusFinal3).outerRadius(outerRadius);
+
+   var pie = d3.layout.pie()           //this will create arc data for us given a list of values
+        .value(function(d) { return d.measure; });    //we must tell it out to access the value of each element in our data array
+
+   var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
+        .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties) 
+        .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
+            .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
+               .attr("class", "slice")    //allow us to style things in the slices (like text)
+               .on("mouseover", up)
+    				
+    				
+    				;
+    				
+        arcs.append("svg:path")
+               .attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
+               .attr("d", arc)     //this creates the actual SVG path using the associated data (pie) with the arc drawing function
+					.append("svg:title") //mouseover title showing the figures
+				   .text(function(d) { return d.data.category + ": " + formatAsPercentage(d.data.measure); });			
+
+        d3.selectAll("g.slice").selectAll("path")
+          .transition()
+			    .duration(750)
+			    .delay(10)
+			    .attr("d", arcFinal )
+			    ;
+	
+	  // Add a label to the larger arcs, translated to the arc centroid and rotated.
+	  // source: http://bl.ocks.org/1305337#index.html
+	  arcs.filter(function(d) { return d.endAngle - d.startAngle > .2; })
+	  		.append("svg:text")
+	      .attr("dy", ".35em")
+	      .attr("text-anchor", "middle")
+	      .attr("transform", function(d) { return "translate(" + arcFinal.centroid(d) + ")rotate(" + angle(d) + ")"; })
+	      //.text(function(d) { return formatAsPercentage(d.value); })
+	      .text(function(d) { return d.data.category; })
+	      ;
+	   
+	   // Computes the label angle of an arc, converting from radians to degrees.
+		function angle(d) {
+		    var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+		    return a > 90 ? a - 180 : a;
+		}
+		    
+		
+		// Pie chart title			
+		vis.append("svg:text")
+	     	.attr("dy", ".35em")
+	      .attr("text-anchor", "middle")
+	      .text("Historial FP DUAL DAW")
+	      .attr("class","title")
+	      ;		    
+
+
+		
+	function mouseover() {
+	  d3.select(this).select("path").transition()
+	      .duration(50)
+	        		.attr("d", arcFinal3)
+	        		;
+	}
+	
+	function mouseout() {
+	  d3.select(this).select("path").transition()
+	      .duration(450)
+	        		.attr("d", arcFinal)
+	        		;
+	}
+	
+	function up(d, i) {
+	
+				/*  Colores */
+				updateBarChart(d.data.category, color(i));
+				updateLineChart(d.data.category, color(i));
+			 
+	}
+}
+
+dsPieChart();
+
+/*
+############# BAR CHART ###################
+-------------------------------------------
+*/
+
+
+
+var datasetBarChart = [
+{ group: "All", category: "A.C", measure: 23 }, 
+{ group: "All", category: "O.P.E", measure: 20 }, 
+{ group: "All", category: "E.P", measure: 41 }, 
+
+{ group: "2012-2013", category: "A.C", measure: 8}, 
+{ group: "2012-2013", category: "O.P.E", measure: 7 }, 
+{ group: "2012-2013", category: "E.P", measure: 6 }, 
+ 
+{ group: "2013-2014", category: "A.C", measure: 14 }, 
+{ group: "2013-2014", category: "O.P.E", measure: 10 }, 
+{ group: "2013-2014", category: "E.P", measure: 10 }, 
+
+{ group: "2014-2015", category: "A.C", measure: 15 }, 
+{ group: "2014-2015", category: "O.P.E", measure: 9 }, 
+{ group: "2014-2015", category: "E.P", measure: 11 }, 
+
+{ group: "2015-2016", category: "A.C", measure: 15}, 
+{ group: "2015-2016", category: "O.P.E", measure: 12 }, 
+{ group: "2015-2016", category: "E.P", measure: 10 }, 
+
+{ group: "2016-2017", category: "A.C", measure: 23}, 
+{ group: "2016-2017", category: "O.P.E", measure: 20 }, 
+{ group: "2016-2017", category: "E.P", measure: 16 }, 
+
+]
+;
+
+
+var group = "All";
+
+function datasetBarChosen(group) {
+	var ds = [];
+	for (x in datasetBarChart) {
+		 if(datasetBarChart[x].group==group){
+		 	ds.push(datasetBarChart[x]);
+		 } 
+		}
+	return ds;
+}
+
+
+function dsBarChartBasics() {
+
+		var margin = {top: 30, right: 5, bottom: 20, left: 50},
+		width = 390 - margin.left - margin.right,
+	   height = 300 - margin.top - margin.bottom,
+		colorBar = d3.scale.category20(),
+		barPadding = 1
+		;
+		
+		return {
+			margin : margin, 
+			width : width, 
+			height : height, 
+			colorBar : colorBar, 
+			barPadding : barPadding
+		}			
+		;
+}
+
+function dsBarChart() {
+
+	var firstDatasetBarChart = datasetBarChosen(group);         	
+	
+	var basics = dsBarChartBasics();
+	
+	var margin = basics.margin,
+		width = basics.width,
+	   height = basics.height,
+		colorBar = basics.colorBar,
+		barPadding = basics.barPadding
+		;
+					
+	var 	xScale = d3.scale.linear()
+						.domain([0, firstDatasetBarChart.length])
+						.range([0, width])
+						;
+						
+  
+	var yScale = d3.scale.linear()
+	
+		   .domain([0, d3.max(firstDatasetBarChart, function(d) { return d.measure; })])
+
+		   .range([height, 0])
+		   ;
+	
+	//Creando elemento SVG
+	
+	var svg = d3.select("#barChart")
+			  .append("svg")
+		    .attr("width", width + margin.left + margin.right)
+		    .attr("height", height + margin.top + margin.bottom)
+		    .attr("id","barChartPlot")
+		    ;
+	
+	var plot = svg
+		    .append("g")
+		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+		    ;
+	            
+	plot.selectAll("rect")
+		   .data(firstDatasetBarChart)
+		   .enter()
+		   .append("rect")
+			.attr("x", function(d, i) {
+			    return xScale(i);
+			})
+		   .attr("width", width / firstDatasetBarChart.length - barPadding)   
+			.attr("y", function(d) {
+			    return yScale(d.measure);
+			})  
+			.attr("height", function(d) {
+			    return height-yScale(d.measure);
+			})
+			.attr("fill", "lightgrey")
+			;
+	
+		
+
+	
+	plot.selectAll("text")
+	.data(firstDatasetBarChart)
+	.enter()
+	.append("text")
+	.text(function(d) {
+			return formatAsInteger(d3.round(d.measure));
+	})
+	.attr("text-anchor", "middle")
+	// Set x position to the left edge of each bar plus half the bar width
+	.attr("x", function(d, i) {
+			return (i * (width / firstDatasetBarChart.length)) + ((width / firstDatasetBarChart.length - barPadding) / 2);
+	})
+	.attr("y", function(d) {
+			return yScale(d.measure) + 14;
+	})
+	.attr("class", "yAxis")
+	
+	
+	var xLabels = svg
+		    .append("g")
+		    .attr("transform", "translate(" + margin.left + "," + (margin.top + height)  + ")")
+		    ;
+	
+	xLabels.selectAll("text.xAxis")
+		  .data(firstDatasetBarChart)
+		  .enter()
+		  .append("text")
+		  .text(function(d) { return d.category;})
+		  .attr("text-anchor", "middle")
+		
+						   .attr("x", function(d, i) {
+						   		return (i * (width / firstDatasetBarChart.length)) + ((width / firstDatasetBarChart.length - barPadding) / 2);
+						   })
+		  .attr("y", 15)
+		  .attr("class", "xAxis")
+		  .on("mouseover", function(d) {
+      d3.select("#soluciones")
+       .style("display", "inline-block")
+  })
+    .on("mouseout", function(d) {
+      d3.select("#soluciones")
+       .style("display", "none")
+  })
+		  ;			
+	 
+
+	
+	svg.append("text")
+		.attr("x", (width + margin.left + margin.right)/2)
+		.attr("y", 15)
+		.attr("class","title")				
+		.attr("text-anchor", "start")
+		//.text("Estadísticas")
+		;
+}
+
+dsBarChart();
+
+ 
+function updateBarChart(group, colorChosen) {
+	
+		var currentDatasetBarChart = datasetBarChosen(group);
+		
+		var basics = dsBarChartBasics();
+	
+		var margin = basics.margin,
+			width = basics.width,
+		   height = basics.height,
+			colorBar = basics.colorBar,
+			barPadding = basics.barPadding
+			;
+		
+		var 	xScale = d3.scale.linear()
+			.domain([0, currentDatasetBarChart.length])
+			.range([0, width])
+			;
+		
+			
+		var yScale = d3.scale.linear()
+	      .domain([0, d3.max(currentDatasetBarChart, function(d) { return d.measure; })])
+	      .range([height,0])
+	      ;
+	      
+	   var svg = d3.select("#barChart svg");
+	      
+	   var plot = d3.select("#barChartPlot")
+	   	.datum(currentDatasetBarChart)
+		   ;
+	
+	  		
+	  	plot.selectAll("rect")
+	      .data(currentDatasetBarChart)
+	      .transition()
+			.duration(750)
+			.attr("x", function(d, i) {
+			    return xScale(i);
+			})
+		   .attr("width", width / currentDatasetBarChart.length - barPadding)   
+			.attr("y", function(d) {
+			    return yScale(d.measure);
+			})  
+			.attr("height", function(d) {
+			    return height-yScale(d.measure);
+			})
+			.attr("fill", colorChosen)
+			;
+		
+		plot.selectAll("text.yAxis") 
+			.data(currentDatasetBarChart)
+			.transition()
+			.duration(750)
+		   .attr("text-anchor", "middle")
+		   .attr("x", function(d, i) {
+		   		return (i * (width / currentDatasetBarChart.length)) + ((width / currentDatasetBarChart.length - barPadding) / 2);
+		   })
+		   .attr("y", function(d) {
+		   		return yScale(d.measure) + 14;
+		   })
+		   .text(function(d) {
+				return formatAsInteger(d3.round(d.measure));
+		   })
+		   .attr("class", "yAxis")					 
+		;
+		
+
+		svg.selectAll("text.title") 
+			.attr("x", (width + margin.left + margin.right)/2)
+			.attr("y", 15)
+			.attr("class","title")				
+			.attr("text-anchor", "middle")
+			.text("Estadísticas " + group)
+      
+		;
+}
+
+function showWelcome()
+{
+   var welcome = document.getElementById('datosInteres');
+   welcome.style.display = 'block';
+}
+
+function hideWelcome()
+{
+   var welcome = document.getElementById('datosInteres');
+   welcome.style.display = 'none';
+}
+function showInformacion()
+{
+   var welcome = document.getElementById('informacion');
+   welcome.style.display = 'block';
+}
+
+function hideInformacion()
+{
+   var welcome = document.getElementById('informacion');
+   welcome.style.display = 'none';
+}
+function showAprender()
+{
+   var welcome = document.getElementById('aprenderInformacion');
+   welcome.style.display = 'block';
+}
+
+function hideAprender()
+{
+   var welcome = document.getElementById('aprenderInformacion');
+   welcome.style.display = 'none';
+}
+function showTrabajar()
+{
+   var welcome = document.getElementById('trabajar');
+   welcome.style.display = 'block';
+}
+
+function hideTrabajar()
+{
+   var welcome = document.getElementById('trabajar');
+   welcome.style.display = 'none';
+}
+  </script>
+</body>
+</html>
